@@ -75,6 +75,7 @@ public class Main {
         int atk = calcAtk(nivel);
         int def = calcDef(nivel);
 
+
         Criatura c = switch (tipo) {
             case "FUEGO" -> new FuegoMon(nombre, nivel, ps, atk, def);
             case "AGUA" -> new Aguamon(nombre, nivel, ps, atk, def);
