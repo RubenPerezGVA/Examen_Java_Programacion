@@ -1,0 +1,53 @@
+package clases;
+
+import interfaces.Entrenable;
+import interfaces.Evolucionable;
+
+public class Aguamon extends Criatura implements Entrenable, Evolucionable {
+
+    public Aguamon(String nombre, int nivel, int psMax, int ataque, int defensa) {
+        super(nombre, nivel, psMax, ataque, defensa);
+    }
+
+    @Override
+    public String getTipo() { return "AGUA"; }
+
+    @Override
+    public int atacar(Criatura objetivo) {
+        if (objetivo == null) throw new IllegalArgumentException("Objetivo null");
+        if (estaDebilitada()) return 0;
+
+        int danoBase = getAtaque() - (objetivo.getDefensa() / 2);
+        if (danoBase < 1) danoBase = 1;
+
+        double mult = Efectividad.multiplicador(getTipo(), objetivo.getTipo());
+        int danoFinal = (int) Math.round(danoBase * mult);
+
+        objetivo.recibirDanio(danoFinal);
+        return danoFinal;
+    }
+
+    @Override
+    public void entrenar() {
+        setNivel(getNivel() + 1);
+        setAtaque(getAtaque() + 1);
+        setDefensa(getDefensa() + 2);
+        setPsActual(getPsActual() + 3);
+    }
+
+    @Override
+    public boolean puedeEvolucionar() { return getNivel() >= 8; }
+
+    @Override
+    public Criatura evolucionar() {
+        if (!puedeEvolucionar()) return this;
+
+        int nuevoPs = (int) Math.round(getPsMax() * 1.2);
+        int nuevoAtk = getAtaque() + 2;
+        int nuevoDef = getDefensa() + 3;
+
+        Aguamon evo = new Aguamon(getNombre() + " Evo", getNivel(), nuevoPs, nuevoAtk, nuevoDef);
+        evo.curarCompleto();
+        return evo;
+    }
+}
